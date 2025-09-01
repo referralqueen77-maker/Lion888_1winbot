@@ -21,7 +21,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Greeting message with Start & Register options"""
     keyboard = [
         [InlineKeyboardButton("▶️ Start Mining", callback_data="start_mining")],
-        [InlineKeyboardButton("📝 Register", callback_data="register")]
+        [InlineKeyboardButton("📝 Register", callback_data="register")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -45,16 +45,16 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if query.data == "start_mining":
         if query.from_user.id not in approved_users:
-            keyboard = [[InlineKeyboardButton("📝 Register", callback_data="register")]]
-            reply_markup = InlineKeyboardMarkup(keyboard)
-
-            not_approved_text = (
+            # Not approved yet
+            caption = (
                 "❌ You are not approved yet.\n\n"
                 "⬇️Register below using code LION888 to start.\n\n"
                 "🦁Text @Teamlionadmin to verify registration and unlock access 🔑\n\n"
                 "✅️DM admin \"DONE\""
             )
-            await query.edit_message_text(not_approved_text, reply_markup=reply_markup)
+            keyboard = [[InlineKeyboardButton("📝 Register 💎", callback_data="register")]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            await query.edit_message_text(caption, reply_markup=reply_markup)
             return
 
         await query.edit_message_text("loading⏳️")
@@ -63,7 +63,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         today = datetime.datetime.now().strftime("%Y-%m-%d")
         session_number = random.randint(100, 999)
         probability = round(random.uniform(85.00, 99.00), 2)
-        traps = random.choices([3, 5, 7], weights=[70, 20, 10])[0]
+        traps = random.choices([3, 5, 7], weights=[70, 20, 10])[0]  # mostly 3
 
         caption = (
             f"🦁 {today}\n"
@@ -75,25 +75,35 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         keyboard = [[InlineKeyboardButton("Get another signal 🦁", callback_data="start_mining")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await query.edit_message_text(caption, reply_markup=reply_markup)
+        await query.message.reply_text(caption, reply_markup=reply_markup)
 
     elif query.data == "register":
+        # Show registration guide with image
+        caption = (
+            "📲 Follow the steps below to register:\n\n"
+            "1️⃣ Use the link below to register with promocode **LION888**\n"
+            "2️⃣ After registering, text @Teamlionadmin for verification ✅"
+        )
+
         keyboard = [
             [InlineKeyboardButton("1️⃣ Use link to register here", url="https://1wcreg.life/casino/list?open=register&p=672y")],
-            [InlineKeyboardButton("2️⃣ Check Registration", url="https://t.me/Teamlionadmin")]
+            [InlineKeyboardButton("2️⃣ Check Registration", url="https://t.me/Teamlionadmin")],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        # Send guide image with caption + buttons
-        image_path = "images/register_guide.jpg"  # make sure this file exists in your repo
-        caption = "📲 Follow the steps below to register:"
-        await query.message.reply_photo(photo=open(image_path, "rb"), caption=caption, reply_markup=reply_markup)
+        await query.message.reply_photo(
+            photo=open("register_guide.jpg", "rb"),
+            caption=caption,
+            reply_markup=reply_markup,
+        )
 
 
 async def approve(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin command to approve a user"""
     if update.effective_user.id != ADMIN_ID:
-        await update.message.reply_text("⛔ You are not authorized to use this command.")
+        await update.message.reply_text(
+            "⛔ You are not authorized to use this command. If you have created new account with code LION888 already, text @Teamlionadmin for access💙"
+        )
         return
 
     try:
