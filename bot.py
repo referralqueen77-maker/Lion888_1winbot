@@ -5,7 +5,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # --- CONFIG ---
-TOKEN = "7923118449:AAFVZSHQ2DNIFLwhLW1NYIRz04Zxoj3imPk"  # Your bot token
+TOKEN = "YOUR_BOT_TOKEN_HERE"  # replace with your bot token
 ADMIN_ID = 8251224100  # your Telegram ID
 
 # Approved users
@@ -30,10 +30,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "NEW???🥂\n"
         "🦁Register first with promocode LION888 to connect your session to your personalised bot for accurate mine signals\n"
         "🦁Our powerful tool uses OpenAI technology to detect the signals straight from your game server💎‼️\n\n"
-        "🦁When you are done with registration text @Lionteamadmin for verification and linkage to our bot💎💙⚙️🤖 \n\n"
+        "🦁When you are done with registration text @Lionteamadmin for verification and linkage to our bot💎💙⚙️🤖\n\n"
         "🦁Start getting your personalised signals with the \"start mining\" to reset a session just press it again or use /start to reboot the bot\n\n"
         "🦁NOTE⚠️\n"
-        "YOU MUST CREATE NEW ACCOUNT WITH PROMOCODE LION888 OR BOT CANT WORK FOR YOUR SESSION‼️‼️⚠️Text @Teamlionadmin for help on creating a new account when you have an account already ☄️"
+        "YOU MUST CREATE NEW ACCOUNT WITH PROMOCODE LION888 OR BOT CANT WORK FOR YOUR SESSION‼️‼️⚠️\n"
+        "Text @Teamlionadmin for help on creating a new account when you have an account already ☄️"
     )
     await update.message.reply_text(welcome_text, reply_markup=reply_markup)
 
@@ -45,19 +46,19 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if query.data == "start_mining":
         if query.from_user.id not in approved_users:
-            # Not approved yet
             keyboard = [
-                [InlineKeyboardButton("📝 Register", callback_data="register")]
+                [InlineKeyboardButton("1️⃣ Use link to register here", url="https://1wcreg.life/casino/list?open=register&p=672y")],
+                [InlineKeyboardButton("2️⃣ Check Registration", url="https://t.me/Teamlionadmin")]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
 
-            not_approved_text = (
+            text = (
                 "❌ You are not approved yet.\n\n"
                 "⬇️Register below using code LION888 to start.\n\n"
                 "🦁Text @Teamlionadmin to verify registration and unlock access 🔑\n\n"
                 "✅️DM admin \"DONE\""
             )
-            await query.edit_message_text(not_approved_text, reply_markup=reply_markup)
+            await query.edit_message_text(text, reply_markup=reply_markup)
             return
 
         await query.edit_message_text("loading⏳️")
@@ -78,7 +79,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         keyboard = [[InlineKeyboardButton("Get another signal 🦁", callback_data="start_mining")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await query.edit_message_text(caption, reply_markup=reply_markup)
+        await query.message.reply_text(caption, reply_markup=reply_markup)
 
     elif query.data == "register":
         keyboard = [
@@ -87,7 +88,10 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await query.edit_message_text("📲 Follow the steps below to register:", reply_markup=reply_markup)
+        # Show guide image with caption + buttons
+        image_path = "register_guide.jpg"
+        caption = "📲 Follow the steps below to register:"
+        await query.message.reply_photo(photo=open(image_path, "rb"), caption=caption, reply_markup=reply_markup)
 
 
 async def approve(update: Update, context: ContextTypes.DEFAULT_TYPE):
