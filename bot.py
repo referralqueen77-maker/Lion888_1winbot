@@ -5,14 +5,11 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # --- CONFIG ---
-TOKEN = "8403520800:AAGwQoHL92EEwPn85AAHy_y6m385peFTSIo"
+TOKEN = "YOUR_BOT_TOKEN_HERE"   # replace with your bot token
 ADMIN_ID = 8251224100  # your Telegram ID
 
 # Approved users
 approved_users = set()
-
-# Images folder (later you can upload images to Railway and update this list)
-IMAGES = ["mine1.jpg", "mine2.jpg", "mine3.jpg"]  # placeholder filenames
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -23,10 +20,8 @@ logging.basicConfig(
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Greeting message with Start & Register options"""
     keyboard = [
-        [
-            InlineKeyboardButton("▶️ Start Mining", callback_data="start_mining"),
-            InlineKeyboardButton("📝 Register", callback_data="register"),
-        ]
+        [InlineKeyboardButton("▶️ Start Mining", callback_data="start_mining")],
+        [InlineKeyboardButton("📝 Register", callback_data="register")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -50,10 +45,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.edit_message_text("❌ You are not approved yet. Text @Teamlionadmin to verify.")
             return
 
-        await query.edit_message_text("loading⏳️")
-
-        # Pick random image
-        chosen_img = random.choice(IMAGES)
+        await query.edit_message_text("⏳ Loading your mining session...")
 
         # Generate session details
         today = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -65,30 +57,35 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"🦁 {today}\n"
             f"Session {session_number} 💎\n"
             f"Probability {probability}% 🦁💎\n"
-            f"💣Traps: {traps}\n"
+            f"💣 Traps: {traps}\n"
         )
 
         keyboard = [[InlineKeyboardButton("Get another signal 🦁", callback_data="start_mining")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await query.message.reply_photo(photo=open(chosen_img, "rb"), caption=caption, reply_markup=reply_markup)
+        await query.message.reply_text(caption, reply_markup=reply_markup)
 
     elif query.data == "register":
         keyboard = [
-            [
-                InlineKeyboardButton("1️⃣Use link to register here", url="https://1wcreg.life/casino/list?open=register&p=672y"),
-                InlineKeyboardButton("2️⃣ Check Registration", url="https://t.me/Teamlionadmin"),
-            ]
+            [InlineKeyboardButton("1️⃣ Use link to register here", url="https://1wcreg.life/casino/list?open=register&p=672y")],
+            [InlineKeyboardButton("2️⃣ Check Registration", url="https://t.me/Teamlionadmin")],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await query.edit_message_text("📲 Follow the steps below to register:", reply_markup=reply_markup)
+        # Send registration guide image + caption
+        await query.message.reply_photo(
+            photo=open("register_guide.jpg", "rb"),
+            caption="📲 Follow the steps below to register:",
+            reply_markup=reply_markup
+        )
 
 
 async def approve(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin command to approve a user"""
     if update.effective_user.id != ADMIN_ID:
-        await update.message.reply_text("⛔ You are not authorized to use this command. If you have created new account with code LION888 already, text @Teamlionadmin for access💙")
+        await update.message.reply_text(
+            "⛔ You are not authorized to use this command. If you have created new account with code LION888 already, text @Teamlionadmin for access💙"
+        )
         return
 
     try:
