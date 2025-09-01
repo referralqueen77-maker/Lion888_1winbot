@@ -5,7 +5,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # --- CONFIG ---
-TOKEN = "YOUR_BOT_TOKEN_HERE"  # replace with your bot token
+TOKEN = "8403520800:AAGwQoHL92EEwPn85AAHy_y6m385peFTSIo"
 ADMIN_ID = 8251224100  # your Telegram ID
 
 # Approved users
@@ -33,8 +33,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🦁When you are done with registration text @Lionteamadmin for verification and linkage to our bot💎💙⚙️🤖\n\n"
         "🦁Start getting your personalised signals with the \"start mining\" to reset a session just press it again or use /start to reboot the bot\n\n"
         "🦁NOTE⚠️\n"
-        "YOU MUST CREATE NEW ACCOUNT WITH PROMOCODE LION888 OR BOT CANT WORK FOR YOUR SESSION‼️‼️⚠️\n"
-        "Text @Teamlionadmin for help on creating a new account when you have an account already ☄️"
+        "YOU MUST CREATE NEW ACCOUNT WITH PROMOCODE LION888 OR BOT CANT WORK FOR YOUR SESSION‼️‼️⚠️Text @Teamlionadmin for help on creating a new account when you have an account already ☄️"
     )
     await update.message.reply_text(welcome_text, reply_markup=reply_markup)
 
@@ -46,19 +45,16 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if query.data == "start_mining":
         if query.from_user.id not in approved_users:
-            keyboard = [
-                [InlineKeyboardButton("1️⃣ Use link to register here", url="https://1wcreg.life/casino/list?open=register&p=672y")],
-                [InlineKeyboardButton("2️⃣ Check Registration", url="https://t.me/Teamlionadmin")]
-            ]
+            keyboard = [[InlineKeyboardButton("📝 Register", callback_data="register")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
 
-            text = (
+            not_approved_text = (
                 "❌ You are not approved yet.\n\n"
                 "⬇️Register below using code LION888 to start.\n\n"
                 "🦁Text @Teamlionadmin to verify registration and unlock access 🔑\n\n"
                 "✅️DM admin \"DONE\""
             )
-            await query.edit_message_text(text, reply_markup=reply_markup)
+            await query.edit_message_text(not_approved_text, reply_markup=reply_markup)
             return
 
         await query.edit_message_text("loading⏳️")
@@ -67,7 +63,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         today = datetime.datetime.now().strftime("%Y-%m-%d")
         session_number = random.randint(100, 999)
         probability = round(random.uniform(85.00, 99.00), 2)
-        traps = random.choices([3, 5, 7], weights=[70, 20, 10])[0]  # mostly 3
+        traps = random.choices([3, 5, 7], weights=[70, 20, 10])[0]
 
         caption = (
             f"🦁 {today}\n"
@@ -79,7 +75,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         keyboard = [[InlineKeyboardButton("Get another signal 🦁", callback_data="start_mining")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await query.message.reply_text(caption, reply_markup=reply_markup)
+        await query.edit_message_text(caption, reply_markup=reply_markup)
 
     elif query.data == "register":
         keyboard = [
@@ -88,8 +84,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        # Show guide image with caption + buttons
-        image_path = "register_guide.jpg"
+        # Send guide image with caption + buttons
+        image_path = "images/register_guide.jpg"  # make sure this file exists in your repo
         caption = "📲 Follow the steps below to register:"
         await query.message.reply_photo(photo=open(image_path, "rb"), caption=caption, reply_markup=reply_markup)
 
@@ -97,9 +93,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def approve(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin command to approve a user"""
     if update.effective_user.id != ADMIN_ID:
-        await update.message.reply_text(
-            "⛔ You are not authorized to use this command. If you have created new account with code LION888 already, text @Teamlionadmin for access💙"
-        )
+        await update.message.reply_text("⛔ You are not authorized to use this command.")
         return
 
     try:
