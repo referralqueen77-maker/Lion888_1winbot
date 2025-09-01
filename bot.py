@@ -26,12 +26,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     welcome_text = (
-        "Welcome onboard lucky user to TEAMLION888 💰✅️\n"
-        "Ready to cashout big⁉️\n"
-        "Register first with promocode LION888 to connect your session to your personalised bot for accurate mine signals🦁💙💎\n\n"
-        "YOU MUST CREATE NEW ACCOUNT WITH PROMOCODE LION888 OR BOT CANT WORK FOR YOUR SESSION‼️‼️⚠️\n\n"
+        "🦁Welcome onboard lucky user to TEAMLION888\n\n"
+        "NEW???🥂\n"
+        "🦁Register first with promocode LION888 to connect your session to your personalised bot for accurate mine signals\n"
+        "🦁Our powerful tool uses OpenAI technology to detect the signals straight from your game server💎‼️\n\n"
+        "🦁When you are done with registration text @Lionteamadmin for verification and linkage to our bot💎💙⚙️🤖\n\n"
+        "🦁Start getting your personalised signals with the \"Start Mining\" button. "
+        "To reset a session just press it again or use /start to reboot the bot.\n\n"
+        "🦁NOTE⚠️\n"
+        "YOU MUST CREATE NEW ACCOUNT WITH PROMOCODE LION888 OR BOT CANT WORK FOR YOUR SESSION‼️‼️⚠️\n"
         "Text @Teamlionadmin for help on creating a new account when you have an account already ☄️"
     )
+
     await update.message.reply_text(welcome_text, reply_markup=reply_markup)
 
 
@@ -42,7 +48,9 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if query.data == "start_mining":
         if query.from_user.id not in approved_users:
-            await query.edit_message_text("❌ You are not approved yet. Text @Teamlionadmin to verify.")
+            await query.edit_message_text(
+                "❌ You are not approved yet. Text @Teamlionadmin to verify."
+            )
             return
 
         await query.edit_message_text("loading⏳️")
@@ -60,32 +68,32 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"💣Traps: {traps}\n"
         )
 
-        keyboard = [[InlineKeyboardButton("Get another signal 🦁", callback_data="start_mining")]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-
-        await query.message.reply_text(caption, reply_markup=reply_markup)
-
-    elif query.data == "register":
         keyboard = [
-            [
-                InlineKeyboardButton("1️⃣ Use link to register here", url="https://1wcreg.life/casino/list?open=register&p=672y"),
-                InlineKeyboardButton("2️⃣ Check Registration", url="https://t.me/Teamlionadmin"),
-            ]
+            [InlineKeyboardButton("Get another signal 🦁", callback_data="start_mining")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        # Send image + message together
-        await query.message.reply_photo(
-            photo=open("register_guide.jpg", "rb"),
-            caption="📲 Follow the steps below to register:",
-            reply_markup=reply_markup
+        await query.edit_message_text(caption, reply_markup=reply_markup)
+
+    elif query.data == "register":
+        keyboard = [
+            [InlineKeyboardButton("1️⃣ Use link to register here", url="https://1wcreg.life/casino/list?open=register&p=672y")],
+            [InlineKeyboardButton("2️⃣ Check Registration", url="https://t.me/Teamlionadmin")],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        await query.edit_message_text(
+            "📲 Follow the steps below to register:", reply_markup=reply_markup
         )
 
 
 async def approve(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin command to approve a user"""
     if update.effective_user.id != ADMIN_ID:
-        await update.message.reply_text("⛔ You are not authorized to use this command. If you have created new account with code LION888 already, text @Teamlionadmin for access💙")
+        await update.message.reply_text(
+            "⛔ You are not authorized to use this command. "
+            "If you have created new account with code LION888 already, text @Teamlionadmin for access💙"
+        )
         return
 
     try:
