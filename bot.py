@@ -76,8 +76,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif query.data == "register":
         keyboard = [
             [
-                InlineKeyboardButton("✅ OK Register", url="https://1wcreg.life/casino/list?open=register&p=672y"),
-                InlineKeyboardButton("🥂 Check Registration", url="https://t.me/Teamlionadmin"),
+                InlineKeyboardButton("1️⃣Use link to register here", url="https://1wcreg.life/casino/list?open=register&p=672y"),
+                InlineKeyboardButton("2️⃣ Check Registration", url="https://t.me/Teamlionadmin"),
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -88,7 +88,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def approve(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin command to approve a user"""
     if update.effective_user.id != ADMIN_ID:
-        await update.message.reply_text("⛔ You are not authorized to use this command.")
+        await update.message.reply_text("⛔ You are not authorized to use this command. If you have created new account with code LION888 already, text @Teamlionadmin for access💙")
         return
 
     try:
